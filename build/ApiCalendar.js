@@ -8,15 +8,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Config = {
-    clientId: process.env.clientId,
-    apiKey: process.env.apiKey,
-    scope: 'https://www.googleapis.com/auth/calendar',
-    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']
-};
-
 var ApiCalendar = function () {
-    function ApiCalendar() {
+    function ApiCalendar(config) {
         _classCallCheck(this, ApiCalendar);
 
         this.sign = false;
@@ -24,6 +17,7 @@ var ApiCalendar = function () {
         this.onLoadCallback = null;
         this.calendar = 'primary';
         try {
+            this.config = config;
             this.updateSigninStatus = this.updateSigninStatus.bind(this);
             this.initClient = this.initClient.bind(this);
             this.handleSignoutClick = this.handleSignoutClick.bind(this);
@@ -65,7 +59,7 @@ var ApiCalendar = function () {
             var _this = this;
 
             this.gapi = window['gapi'];
-            this.gapi.client.init(Config).then(function () {
+            this.gapi.client.init(this.config).then(function () {
                 // Listen for sign-in state changes.
                 _this.gapi.auth2.getAuthInstance().isSignedIn.listen(_this.updateSigninStatus);
                 // Handle the initial sign-in state.
@@ -355,11 +349,5 @@ var ApiCalendar = function () {
     return ApiCalendar;
 }();
 
-var apiCalendar = void 0;
-try {
-    apiCalendar = new ApiCalendar();
-} catch (e) {
-    console.log(e);
-}
-exports.default = apiCalendar;
+exports.default = ApiCalendar;
 

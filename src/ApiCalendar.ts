@@ -1,20 +1,13 @@
-const Config = {
-  clientId: process.env.clientId,
-  apiKey: process.env.apiKey,
-  scope: 'https://www.googleapis.com/auth/calendar',
-  discoveryDocs: [
-    'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
-  ],
-}
-
 class ApiCalendar {
   sign: boolean = false;
   gapi: any = null;
   onLoadCallback: any = null;
   calendar: string = 'primary';
+  config: object;
 
-  constructor() {
+  constructor(config: any) {
     try {
+      this.config = config;
       this.updateSigninStatus = this.updateSigninStatus.bind(this);
       this.initClient = this.initClient.bind(this);
       this.handleSignoutClick = this.handleSignoutClick.bind(this);
@@ -50,7 +43,7 @@ class ApiCalendar {
   private initClient(): void {
     this.gapi = window['gapi'];
     this.gapi.client
-      .init(Config)
+      .init(this.config)
       .then(() => {
         // Listen for sign-in state changes.
         this.gapi.auth2
@@ -312,10 +305,4 @@ class ApiCalendar {
   }
 }
 
-let apiCalendar;
-try {
-  apiCalendar = new ApiCalendar();
-} catch (e) {
-  console.log(e);
-}
-export default apiCalendar;
+export default ApiCalendar;
