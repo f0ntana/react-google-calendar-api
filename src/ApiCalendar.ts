@@ -1,4 +1,11 @@
-const Config = require('../../../apiGoogleconfig.json');
+const Config = {
+  clientId: process.env.clientId,
+  apiKey: process.env.apiKey,
+  scope: 'https://www.googleapis.com/auth/calendar',
+  discoveryDocs: [
+    'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
+  ],
+}
 
 class ApiCalendar {
   sign: boolean = false;
@@ -79,13 +86,13 @@ class ApiCalendar {
   /**
    * Sign in Google user account
    */
-   public handleAuthClick(): Promise<any> {
-      if (this.gapi) {
-          return this.gapi.auth2.getAuthInstance().signIn();
-      } else {
-          console.log('Error: this.gapi not loaded')
-          return Promise.reject(new Error('Error: this.gapi not loaded'));
-      }
+  public handleAuthClick(): Promise<any> {
+    if (this.gapi) {
+      return this.gapi.auth2.getAuthInstance().signIn();
+    } else {
+      console.log('Error: this.gapi not loaded')
+      return Promise.reject(new Error('Error: this.gapi not loaded'));
+    }
   }
 
   /**
@@ -163,15 +170,15 @@ class ApiCalendar {
    * @param {string} calendarId to see by default use the calendar attribute
    * @returns {any}
    */
-  public listEvents(queryOptions: object,calendarId: string = this.calendar): any {
+  public listEvents(queryOptions: object, calendarId: string = this.calendar): any {
     if (this.gapi) {
-        return this.gapi.client.calendar.events.list({
-            calendarId,
-            ...queryOptions
-        });
+      return this.gapi.client.calendar.events.list({
+        calendarId,
+        ...queryOptions
+      });
     } else {
-        console.log('Error: this.gapi not loaded');
-        return false;
+      console.log('Error: this.gapi not loaded');
+      return false;
     }
   }
 
@@ -212,7 +219,7 @@ class ApiCalendar {
    * @param {string} sendUpdates Acceptable values are: "all", "externalOnly", "none"
    * @returns {any}
    */
-  public createEvent(event: object, calendarId: string = this.calendar, sendUpdates: string = 'none' ): any {
+  public createEvent(event: object, calendarId: string = this.calendar, sendUpdates: string = 'none'): any {
     if (this.gapi) {
       return this.gapi.client.calendar.events.insert({
         calendarId: calendarId,
